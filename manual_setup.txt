@@ -1,0 +1,61 @@
+# --------------------------------------------------
+# Setting up Airflow manually via CLI
+# --------------------------------------------------
+
+# Create and start a docker container from the Docker image python:3.8-slim and execute the command /bin/bash in order to have a shell session
+# create a docker container from python:3.8-slim
+# --rm will ensure that the container is destroyed at the end of the session
+# -v will link the volume for 
+# docker run -it --rm -p 8081:8081 python:3.8-slim /bin/bash
+docker run -it --rm -p 8081:8081 -v C:/github-workspaces/lab-climate-change/mnt/airflow/dags:/opt/airflow/dags python:3.8-slim /bin/bash
+
+# Get the Python version, Python 3.8.19 as of writing
+python -V
+
+# Set environment variable, this contains all files relevant to Airflow such as dags, logs, and config
+export AIRFLOW_HOME=/usr/local/airflow
+
+# Verify export
+env | grep airflow
+# AIRFLOW_HOME=/usr/local/airflow
+
+# Install needed updates, and useful commands. Based from official documentation with minor adjustments
+# https://airflow.apache.org/docs/apache-airflow/2.4.0/installation/dependencies.html
+apt-get update -y && apt-get install -y --no-install-recommends freetds-bin krb5-user ldap-utils libffi-dev libsasl2-dev libsasl2-modules libssl-dev locales lsb-release sasl2-bin sqlite3 unixodbc libczmq-dev inetutils-telnet bind9utils freetds-dev libkrb5-dev libpq-dev build-essential default-libmysqlclient-dev wget curl git zip unzip gcc apt-utils rsync procps && apt-get clean
+
+# Create user
+useradd -ms /bin/bash -d ${AIRFLOW_HOME} airflow
+
+# Verify useradd
+cat /etc/passwd | grep airflow
+# airflow:x:1000:1000::/usr/local/airflow:/bin/bash
+
+# Upgrade pip
+pip install --upgrade pip
+
+# Login as application user airflow
+su - airflow
+
+# Create a virtual environment
+python -m venv .sandbox
+
+# Activate virtual environment
+source .sandbox/bin/activate
+
+# Get constraints file for Airflow=2.4.0 Python=3.8
+wget https://raw.githubusercontent.com/apache/airflow/constraints-2.4.0/constraints-3.8.txt
+
+# Install Airflow, including some providers
+pip install "apache-airflow[crypto,celery,postgres,cncf.kubernetes,docker]"==2.4.0 --constraint ./constraints-3.8.txt
+
+# Initialize SQLite database for metadata/metadatabase
+airflow db init
+
+# Create webserver user
+airflow users create -e "admin@airflow.com" -f "airflow" -l "airflow" -p "airflow" -r "Admin" -u "airflow"
+
+# Start scheduler as a background process, i.e. append the &
+airflow scheduler &
+
+# Start webserver as a background process, i.e. append the &. Set port to 8081
+airflow webserver -p 8081 &
