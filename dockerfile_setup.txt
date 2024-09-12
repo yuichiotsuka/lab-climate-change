@@ -1,0 +1,53 @@
+# Go into the base directory of the Docker image, i.e. where the Dockerfile is located
+cd C:/github-workspaces/lab-climate-change/docker/airflow
+
+# Build the Docker image
+docker build -t airflow-climate-change .
+
+# Sample Output
+
+#[+] Building 93.4s (12/12) FINISHED                                                                                                                                       docker:desktop-linux
+# => [internal] load build definition from Dockerfile                                                                                                                                      0.1s
+# => => transferring dockerfile: 1.94kB                                                                                                                                                    0.0s
+# => [internal] load metadata for docker.io/library/python:3.8-slim                                                                                                                        0.0s
+# => [internal] load .dockerignore                                                                                                                                                         0.0s
+# => => transferring context: 2B                                                                                                                                                           0.0s
+# => CACHED [1/7] FROM docker.io/library/python:3.8-slim                                                                                                                                   0.0s
+# => [internal] load build context                                                                                                                                                         0.1s
+# => => transferring context: 508B                                                                                                                                                         0.0s
+# => [2/7] RUN apt-get update -y &&     apt-get install -y --no-install-recommends     freetds-bin     krb5-user     ldap-utils     libffi-dev     libsasl2-dev     libsasl2-modules      33.0s
+# => [3/7] RUN pip install --upgrade "pip==20.2.4" &&     useradd -ms /bin/bash -d /opt/airflow airflow &&     pip install apache-airflow==2.4.0 --constraint https://raw.githubusercont  56.4s
+# => [4/7] RUN chown -R airflow: /opt/airflow                                                                                                                                              0.5s
+# => [5/7] COPY ./start-airflow.sh ./start-airflow.sh                                                                                                                                      0.1s
+# => [6/7] RUN chmod +x ./start-airflow.sh                                                                                                                                                 0.5s
+# => [7/7] RUN mkdir -p /opt/airflow/dags                                                                                                                                                  0.5s
+# => exporting to image                                                                                                                                                                    2.2s
+# => => exporting layers                                                                                                                                                                   2.2s
+# => => writing image sha256:82fd92bfd7f852ebc7e6f741869243a9ca808cf776abfffdda3a5b03b22f5211                                                                                              0.0s
+# => => naming to docker.io/library/airflow-climate-change                                                                                                                                 0.0s
+#
+#What's next:
+#    View a summary of image vulnerabilities and recommendations → docker scout quickview
+
+# Check image
+docker image ls
+
+# Sample Output
+#REPOSITORY                         TAG        IMAGE ID       CREATED          SIZE
+#airflow-climate-change             latest     82fd92bfd7f8   14 minutes ago   840MB
+
+# Run docker build as follows
+docker run --rm -d -p 8080:8080 airflow-climate-change
+
+# Check status
+docker ps
+
+# Sample Output
+#CONTAINER ID   IMAGE                    COMMAND                CREATED         STATUS         PORTS                    NAMES
+#014d785c4fae   airflow-climate-change   "./start-airflow.sh"   4 minutes ago   Up 4 minutes   0.0.0.0:8080->8080/tcp   suspicious_tharp
+
+# To access the shell script, get the <container_id>
+docker exec -it 014d785c4fae /bin/bash
+
+# To stop the container (and destroy it as well, since we specified --rm)
+docker stop 014d785c4fae
