@@ -38,6 +38,7 @@ docker image ls
 
 # Run docker build as follows
 docker run --rm -d -p 8080:8080 airflow-climate-change
+docker run --rm -d -p 8080:8080 -v C:/github-workspaces/lab-climate-change/mnt/airflow/dags:/opt/airflow/dags airflow-climate-change
 
 # Check status
 docker ps
