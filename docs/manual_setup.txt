@@ -1,5 +1,5 @@
 # --------------------------------------------------
-# Setting up Airflow manually via CLI
+# Setup Airflow manually CLI
 # --------------------------------------------------
 
 # Create and start a docker container from the Docker image python:3.8-slim and execute the command /bin/bash in order to have a shell session

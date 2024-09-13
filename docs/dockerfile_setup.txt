@@ -1,3 +1,7 @@
+# --------------------------------------------------
+# Setup Airflow using Dockerfile + CLI
+# --------------------------------------------------
+
 # Go into the base directory of the Docker image, i.e. where the Dockerfile is located
 cd C:/github-workspaces/lab-climate-change/docker/airflow
 

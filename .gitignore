@@ -1,0 +1,11 @@
+# Airflow
+mnt/airflow/airflow.cfg
+
+# Environments
+.env
+
+# Python
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
