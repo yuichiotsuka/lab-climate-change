@@ -42,6 +42,7 @@ RUN apt-get update -y && \
     apt-utils \
     rsync \
     procps \
+    sed \
     && apt-get clean
 
 # Upgrade pip
