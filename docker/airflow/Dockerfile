@@ -43,6 +43,7 @@ RUN apt-get update -y && \
     rsync \
     procps \
     sed \
+    netcat-openbsd \
     && apt-get clean
 
 # Upgrade pip
